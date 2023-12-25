@@ -1,0 +1,10 @@
+---
+- name: Instalation of DHCP in Localhost
+  hosts: localhost
+  connection: local 
+  become: yes
+  tasks:
+    - name: Instalation of DHCP
+      yum:
+        name: dhcp-server
+        state: latest
