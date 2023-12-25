@@ -36,3 +36,14 @@
 
     - name: Bring up internet connection
       command: nmcli c up internet
+
+    - name: Enable IP forwarding in sysctl.conf
+      ansible.builtin.lineinfile:
+        path: /etc/sysctl.conf
+        line: 'net.ipv4.ip_forward=1'
+        create: yes
+        state: present
+
+    - name: Reload sysctl settings
+      ansible.builtin.command:
+        cmd: sysctl -p
