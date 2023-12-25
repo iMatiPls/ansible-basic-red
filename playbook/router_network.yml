@@ -3,6 +3,10 @@
   hosts: localhost
   become: yes
   tasks:
+    - name: Set hostname to 'router'
+      ansible.builtin.hostname:
+        name: router
+
     - name: Add ethernet connection for internal network
       community.general.nmcli:
         conn_name: red_interna
