@@ -50,3 +50,15 @@
     - name: Reload sysctl settings
       ansible.builtin.command:
         cmd: sysctl -p
+
+    - name: Set servers network connection to trusted zone
+      ansible.builtin.command:
+        cmd: nmcli con mod red_servidores connection.zone trusted
+
+    - name: Set internal network connection to trusted zone
+      ansible.builtin.command:
+        cmd: nmcli con mod red_interna connection.zone trusted
+
+    - name: Set internet connection to external zone
+      ansible.builtin.command:
+        cmd: nmcli con mod internet connection.zone external
