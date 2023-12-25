@@ -29,13 +29,16 @@
         state: present
 
     - name: Bring up internal network connection
-      command: nmcli c up red_interna
+      ansible.builtin.command:
+        cmd: nmcli c up red_interna
 
     - name: Bring up servers network connection
-      command: nmcli c up red_servidores
+      ansible.builtin.command:
+        cmd: nmcli c up red_servidores
 
     - name: Bring up internet connection
-      command: nmcli c up internet
+      ansible.builtin.command:
+        cmd: nmcli c up internet
 
     - name: Enable IP forwarding in sysctl.conf
       ansible.builtin.lineinfile:
