@@ -1,0 +1,38 @@
+---
+- name: Configure Network Manager
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: Add ethernet connection for internal network
+      community.general.nmcli:
+        conn_name: red_interna
+        ifname: enp0s9
+        type: ethernet
+        ip4: 192.168.2.1/24
+        state: present
+
+    - name: Add ethernet connection for servers network
+      community.general.nmcli:
+        conn_name: red_servidores
+        ifname: enp0s8
+        type: ethernet
+        ip4: 192.168.1.1/24
+        state: present
+
+    - name: Add ethernet connection for internet
+      community.general.nmcli:
+        conn_name: internet
+        ifname: enp0s3
+        type: ethernet
+        method4: auto
+        dns4: 8.8.8.8
+        state: present
+
+    - name: Bring up internal network connection
+      command: nmcli c up red_interna
+
+    - name: Bring up servers network connection
+      command: nmcli c up red_servidores
+
+    - name: Bring up internet connection
+      command: nmcli c up internet
