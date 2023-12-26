@@ -1,3 +1,4 @@
-192.168.1.10
-192.168.1.11
-192.168.1.12
+[all]
+dns_server ansible_host=192.168.1.10
+web_server ansible_host=192.168.1.11
+db_server ansible_host=192.168.1.12
