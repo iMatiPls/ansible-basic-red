@@ -1,0 +1,26 @@
+option domain-name-servers {{ preferred_dns }};
+option domain-name "obligatorio.ort";
+
+subnet 192.168.2.0 netmask 255.255.255.0 {
+    range 192.168.2.100 192.168.2.200;
+    option routers 192.168.2.1;
+}
+
+subnet 192.168.1.0 netmask 255.255.255.0 {
+    option routers 192.168.1.1;
+
+    host dns {
+        hardware ethernet {{ dns_mac }};
+        fixed-address 192.168.1.10;
+    }
+
+    host webserver_revervesproxy {
+        hardware ethernet {{ webserver_mac }};
+        fixed-address 192.168.1.11;
+    }
+
+    host base_de_datos {
+        hardware ethernet {{ db_mac }};
+        fixed-address 192.168.1.12;
+    }
+}
