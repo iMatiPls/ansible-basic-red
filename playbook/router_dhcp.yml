@@ -1,10 +1,49 @@
 ---
-- name: Instalation of DHCP in Localhost
+- name: Installation of DHCP in Localhost
   hosts: localhost
-  connection: local 
   become: yes
+  vars:
+    dhcp_conf_template: templates/dhcpd.conf.j2
+    dhcp_conf_path: /etc/dhcp/dhcpd.conf
+    preferred_dns: "8.8.8.8"
+
+  vars_prompt:
+    - name: dns_mac
+      prompt: "Enter the MAC address of the DNS"
+      private: no
+
+    - name: webserver_mac
+      prompt: "Enter the MAC address of the webserver"
+      private: no
+
+    - name: db_mac
+      prompt: "Enter the MAC address of the db"
+      private: no
+
   tasks:
-    - name: Instalation of DHCP
-      yum:
+    - name: Save MAC addresses to a file
+      ansible.builtin.copy:
+        content: |
+          dns_mac: "{{ dns_mac }}"
+          webserver_mac: "{{ webserver_mac }}"
+          db_mac: "{{ db_mac }}"
+        dest: "{{ playbook_dir }}/../tmp/mac_addresses.yml"
+
+    - name: Installation of DHCP
+      dnf:
         name: dhcp-server
         state: latest
+
+    - name: Copy new DHCP configuration to remote host
+      ansible.builtin.template:
+        src: "{{ playbook_dir }}/../{{ dhcp_conf_template }}"
+        dest: "{{ dhcp_conf_path }}"
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Restart the DHCP service to apply the changes
+      ansible.builtin.service:
+        name: dhcpd
+        state: restarted
+        enabled: yes
