@@ -1,0 +1,35 @@
+---
+- name: Install DNS package and utilities
+  dnf:
+    name:
+      - bind
+      - bind-utils
+    state: latest
+
+- name: Configuring the main named.conf options
+  template:
+    src: "{{ playbook_dir }}/../{{ template_dir }}/{{ named_conf }}.j2"
+    dest: /etc/named.conf
+
+- name: Create DNS zone files
+  template:
+    src: "{{ playbook_dir }}/../{{ template_dir }}/{{ zone_file }}.j2"
+    dest: "/var/named/{{ zone_file }}"
+
+- name: Configuring the reverse zone file
+  template:
+    src: "{{ playbook_dir }}/../{{ template_dir }}/{{ reverse_zone_file }}.j2"
+    dest: "/var/named/{{ reverse_zone_file }}"
+
+- name: Enable and restart the DNS service
+  systemd:
+    name: named
+    enabled: yes
+    state: started
+    
+- name: Add 'dns' service to the permanent firewall configuration
+  firewalld:
+    service: dns
+    state: enabled
+    permanent: yes
+    immediate: yes

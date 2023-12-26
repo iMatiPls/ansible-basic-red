@@ -1,0 +1,36 @@
+---
+- name: Configure the initial network in the router
+  hosts: localhost
+  roles:
+    - router_network_01
+
+- name: Configure the DHCP service in the router
+  hosts: localhost
+  vars:
+    dhcp_conf_template: templates/dhcpd.conf.j2
+    dhcp_conf_path: /etc/dhcp/dhcpd.conf
+    preferred_dns: "8.8.8.8"
+  vars_prompt:
+  - name: dns_mac
+    prompt: "Enter the MAC address of the DNS"
+    private: no
+
+  - name: webserver_mac
+    prompt: "Enter the MAC address of the webserver"
+    private: no
+
+  - name: db_mac
+    prompt: "Enter the MAC address of the db"
+    private: no
+  roles:
+    - router_dhcp
+
+- name: Configure the DNS service in the server1
+  hosts: dns_server
+  vars:
+    template_dir: "templates"
+    zone_file: "obligatorio.ort.zone"
+    reverse_zone_file: "192.168.1.zone"
+    named_conf: "named.conf"
+  roles:
+    - server1_dns

@@ -1,0 +1,19 @@
+---
+- name: Installation of DHCP
+  dnf:
+    name: dhcp-server
+    state: latest
+
+- name: Copy new DHCP configuration to remote host
+  ansible.builtin.template:
+    src: "{{ playbook_dir }}/../{{ dhcp_conf_template }}"
+    dest: "{{ dhcp_conf_path }}"
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Restart the DHCP service to apply the changes
+  ansible.builtin.service:
+    name: dhcpd
+    state: restarted
+    enabled: yes
