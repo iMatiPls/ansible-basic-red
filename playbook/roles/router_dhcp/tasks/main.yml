@@ -17,3 +17,8 @@
     name: dhcpd
     state: restarted
     enabled: yes
+
+- name: Set DNS server for nmcli profile
+  shell: nmcli connection modify internet ipv4.dns "{{ preferred_dns }}"
+- name: Restart the network to apply the changes
+  shell: nmcli c down internet && nmcli c up internet
