@@ -1,0 +1,8 @@
+---
+# Here is where you can change the MAC addresses of your VMs
+dns_mac: "08:00:27:DE:B5:D8"
+webserver_mac: "08:00:27:51:7F:F5"
+db_mac: "08:00:27:6F:2E:D9"
+
+# Here is where you can change the password of the root user of your VMs
+ssh_password: "aslxlab"
