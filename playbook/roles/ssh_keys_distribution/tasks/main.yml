@@ -9,6 +9,6 @@
     ignore_errors: yes
 
   - name: Copy the SSH key to the remote hosts
-    shell: sshpass -p "{{ ssh_password }}" ssh-copy-id -o StrictHostKeyChecking=no -i "{{ ssh_key_file }}" "{{ remote_user }}@{{ hostvars[item].ansible_host }}"
+    shell: sshpass -p "{{ ssh_password }}" ssh-copy-id -o StrictHostKeyChecking=no -i "{{ ssh_key_file }}" "{{ remote_user_ssh }}@{{ hostvars[item].ansible_host }}"
     loop: "{{ groups['all'] }}"
     ignore_errors: yes
