@@ -1,0 +1,7 @@
+---
+- name: Release the current DHCP lease
+  ansible.builtin.shell: 
+    cmd: nmcli con down id "{{ item }}" && nmcli con up id "{{ item }}"
+  with_items: "{{ ansible_facts['interfaces'] }}"
+  when: "'en' in item"
+  ignore_errors: true

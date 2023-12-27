@@ -8,7 +8,8 @@
 - name: Configure the DHCP service in the router
   gather_facts: no
   hosts: localhost
-  vars_prompt:
+  vars:
+    preferred_dns: "8.8.8.8"
   vars_files:
     - ../config.yml
   roles:
@@ -30,5 +31,20 @@
 
 - name: Configure the DNS service in the server1
   hosts: dns_server
+
   roles:
     - server1_dns
+
+- name: Change the default DNS server in DHCP
+  hosts: localhost
+  vars:
+    preferred_dns: "192.168.1.10"
+  vars_files:
+    - ../config.yml
+  roles:
+    - router_dhcp
+
+- name: Reload the DHCP config in all the hosts to apply the changes
+  hosts: all
+  roles:
+    - reload_dhcp
