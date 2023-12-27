@@ -1,0 +1,4 @@
+---
+dhcp_conf_template: dhcpd.conf.j2
+dhcp_conf_path: /etc/dhcp/dhcpd.conf
+preferred_dns: "8.8.8.8"

@@ -1,0 +1,14 @@
+---
+  - name: Verificar conectividad de red (ping ICMP)
+    shell: ping -c 1 {{ hostvars[item].ansible_host }}
+    register: ping_result
+    until: ping_result.rc == 0
+    retries: 10
+    delay: 30
+    loop: "{{ groups['all'] }}"
+    ignore_errors: yes
+
+  - name: Copy the SSH key to the remote hosts
+    shell: sshpass -p "{{ ssh_password }}" ssh-copy-id -o StrictHostKeyChecking=no -i "{{ ssh_key_file }}" "{{ remote_user }}@{{ hostvars[item].ansible_host }}"
+    loop: "{{ groups['all'] }}"
+    ignore_errors: yes

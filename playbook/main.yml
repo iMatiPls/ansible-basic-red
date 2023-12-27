@@ -1,15 +1,13 @@
 ---
 - name: Configure the initial network in the router
+  gather_facts: no
   hosts: localhost
   roles:
     - router_network_01
 
 - name: Configure the DHCP service in the router
+  gather_facts: no
   hosts: localhost
-  vars:
-    dhcp_conf_template: templates/dhcpd.conf.j2
-    dhcp_conf_path: /etc/dhcp/dhcpd.conf
-    preferred_dns: "8.8.8.8"
   vars_prompt:
   - name: dns_mac
     prompt: "Enter the MAC address of the DNS"
@@ -25,12 +23,23 @@
   roles:
     - router_dhcp
 
+- name: Create the SSH key for Ansible
+  gather_facts: no
+  hosts: localhost
+  roles:
+    - ssh_key_creation
+
+- name: SSH key management
+  gather_facts: no
+  hosts: localhost
+  vars_prompt:
+    - name: ssh_password
+      prompt: "Introduce the password of the remote computers"
+      private: yes
+  roles:
+    - ssh_keys_distribution
+
 - name: Configure the DNS service in the server1
   hosts: dns_server
-  vars:
-    template_dir: "templates"
-    zone_file: "obligatorio.ort.zone"
-    reverse_zone_file: "192.168.1.zone"
-    named_conf: "named.conf"
   roles:
     - server1_dns

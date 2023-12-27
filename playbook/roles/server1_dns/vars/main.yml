@@ -1,0 +1,4 @@
+---
+zone_file: "obligatorio.ort.zone"
+reverse_zone_file: "192.168.1.zone"
+named_conf: "named.conf"

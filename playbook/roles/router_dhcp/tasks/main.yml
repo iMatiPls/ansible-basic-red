@@ -6,7 +6,7 @@
 
 - name: Copy new DHCP configuration to remote host
   ansible.builtin.template:
-    src: "{{ playbook_dir }}/../{{ dhcp_conf_template }}"
+    src: "{{ dhcp_conf_template }}"
     dest: "{{ dhcp_conf_path }}"
     owner: root
     group: root
