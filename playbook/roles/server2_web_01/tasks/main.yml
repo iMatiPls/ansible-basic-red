@@ -1,0 +1,80 @@
+---
+- name: Instalar Python, entorno virtual y Apache HTTP Server
+  dnf:
+    name:
+      - python3
+      - httpd
+      - python3-pip
+    state: latest
+
+- name: Install virtualenv with pip
+  pip:
+    name: 
+      - virtualenv
+      - setuptools
+    state: latest
+
+- name: Habilitar y arrancar el servicio Apache
+  systemd:
+    name: httpd
+    enabled: yes
+    state: started
+
+- name: Crear usuario para la aplicación web
+  user:
+    name: microblog
+    shell: /usr/sbin/nologin
+    comment: "Aplicación WEB"
+    state: present
+
+- name: Crear directorios para el entorno virtual y la aplicación
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: microblog
+    group: microblog
+  loop:
+    - /opt/pyenv
+    - /opt/app
+
+- name: Copiar el archivo de la aplicación web al host remoto
+  copy:
+    src: microblog.tar.gz
+    dest: /tmp/microblog.tar.gz
+    owner: microblog
+    group: microblog
+    mode: '0644'
+
+- name: Descomprimir el archivo de la aplicación web
+  unarchive:
+    src: /tmp/microblog.tar.gz
+    dest: /opt/app
+    remote_src: yes
+  become_user: microblog
+
+- name: Cambiar propiedad de los archivos de la aplicación
+  file:
+    path: /opt/app
+    state: directory
+    owner: microblog
+    group: microblog
+    recurse: yes
+
+- name: Crear entorno virtual para la aplicación
+  command:
+    cmd: python3 -m venv /opt/pyenv/microblog
+    creates: /opt/pyenv/microblog/bin/activate
+
+- name: Instalar dependencias de la aplicación
+  pip:
+    requirements: /opt/app/microblog/requirements.txt
+    virtualenv: /opt/pyenv/microblog
+    virtualenv_command: /opt/pyenv/microblog/bin/python3 -m venv
+
+- name: Instalar Gunicorn y PyMySQL
+  pip:
+    name: "{{ item }}"
+    virtualenv: /opt/pyenv/microblog
+  loop:
+    - gunicorn
+    - pymysql

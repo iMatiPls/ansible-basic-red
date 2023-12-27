@@ -53,3 +53,8 @@
   hosts: db_server
   roles:
     - server3_db
+
+- name: Install and configure the Apache service in the server2
+  hosts: web_server
+  roles:
+    - server2_web_01
