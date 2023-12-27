@@ -9,17 +9,8 @@
   gather_facts: no
   hosts: localhost
   vars_prompt:
-  - name: dns_mac
-    prompt: "Enter the MAC address of the DNS"
-    private: no
-
-  - name: webserver_mac
-    prompt: "Enter the MAC address of the webserver"
-    private: no
-
-  - name: db_mac
-    prompt: "Enter the MAC address of the db"
-    private: no
+  vars_files:
+    - ../config.yml
   roles:
     - router_dhcp
 
@@ -32,10 +23,8 @@
 - name: SSH key management
   gather_facts: no
   hosts: localhost
-  vars_prompt:
-    - name: ssh_password
-      prompt: "Introduce the password of the remote computers"
-      private: yes
+  vars_files:
+    - ../config.yml
   roles:
     - ssh_keys_distribution
 
