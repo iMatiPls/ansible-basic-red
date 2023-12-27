@@ -1,0 +1,16 @@
+---
+- name: Install MatriaDB on db_server
+  dnf:
+    name: mariadb-server
+    state: latest
+- name: Start the MariaDB service
+  systemd:
+    name: mariadb
+    state: started
+    enabled: yes
+- name: Allow in firewall the MariaDB service
+  firewalld:
+    service: mysql
+    permanent: yes
+    immediate: yes
+    state: enabled

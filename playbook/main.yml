@@ -48,3 +48,8 @@
   hosts: all
   roles:
     - reload_dhcp
+
+- name: Install and configure the MariaDB service in the server3
+  hosts: db_server
+  roles:
+    - server3_db
